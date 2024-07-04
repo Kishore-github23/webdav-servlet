@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 import net.sf.webdav.exceptions.UnauthenticatedException;
 import net.sf.webdav.exceptions.WebdavException;
 import net.sf.webdav.fromcatalina.MD5Encoder;
@@ -108,6 +109,7 @@ public class WebDavServletBean extends HttpServlet {
         return method;
     }
 
+
     /**
      * Handles the special WebDAV methods.
      */
@@ -123,8 +125,9 @@ public class WebDavServletBean extends HttpServlet {
             debugRequest(methodName, req);
 
         try {
+
             Principal userPrincipal = getUserPrincipal(req);
-            transaction = _store.begin(userPrincipal);
+            transaction = _store.begin(userPrincipal, req);
             needRollback = true;
             _store.checkAuthentication(transaction);
             resp.setStatus(WebdavStatus.SC_OK);

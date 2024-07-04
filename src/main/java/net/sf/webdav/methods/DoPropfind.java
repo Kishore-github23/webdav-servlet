@@ -210,7 +210,8 @@ public class DoPropfind extends AbstractMethod {
             String mimeType) throws WebdavException {
 
         parseProperties(transaction, req, generatedXML, currentPath,
-                propertyFindType, properties, mimeType);
+                propertyFindType, properties, _mimeTyper
+                .getMimeType(transaction, currentPath));
 
         if (depth > 0) {
             // no need to get name if depth is already zero

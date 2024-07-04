@@ -16,6 +16,7 @@
 package net.sf.webdav.methods;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -183,6 +184,7 @@ public class DoCopy extends AbstractMethod {
 
                     } else {
                         resp.setStatus(WebdavStatus.SC_CREATED);
+                        
                     }
                 } else {
 
@@ -241,10 +243,14 @@ public class DoCopy extends AbstractMethod {
 
         StoredObject sourceSo = _store.getStoredObject(transaction, sourcePath);
         if (sourceSo.isResource()) {
+        	//long length = req.getContentLengthLong();
+        	long length = sourceSo.getResourceLength();
             _store.createResource(transaction, destinationPath);
+            InputStream out = _store.getResourceContent(resp, transaction,
+                    sourcePath);
             long resourceLength = _store.setResourceContent(transaction,
-                    destinationPath, _store.getResourceContent(transaction,
-                            sourcePath), null, null);
+                    destinationPath, out, req.getContentType(), null, length);
+            out.close();
 
             if (resourceLength != -1) {
                 StoredObject destinationSo = _store.getStoredObject(
@@ -308,12 +314,13 @@ public class DoCopy extends AbstractMethod {
                     childSo = _store.getStoredObject(transaction,
                             (sourcePath + children[i]));
                     if (childSo.isResource()) {
+                    	long length = req.getContentLengthLong();
                         _store.createResource(transaction, destinationPath
                                 + children[i]);
                         long resourceLength = _store.setResourceContent(
                                 transaction, destinationPath + children[i],
-                                _store.getResourceContent(transaction,
-                                        sourcePath + children[i]), null, null);
+                                _store.getResourceContent(resp, transaction,
+                                        sourcePath + children[i]), req.getContentType(), null, length);
 
                         if (resourceLength != -1) {
                             StoredObject destinationSo = _store

@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+
 import net.sf.webdav.exceptions.WebdavException;
 
 /**
@@ -53,7 +58,9 @@ public class LocalFileSystemStore implements IWebdavStore {
         ;
     }
 
-    public ITransaction begin(Principal principal) throws WebdavException {
+	
+	@Override	
+    public ITransaction begin(Principal principal, HttpServletRequest req) throws WebdavException {
         LOG.trace("LocalFileSystemStore.begin()");
         if (!_root.exists()) {
             if (!_root.mkdirs()) {
@@ -107,7 +114,7 @@ public class LocalFileSystemStore implements IWebdavStore {
     }
 
     public long setResourceContent(ITransaction transaction, String uri,
-            InputStream is, String contentType, String characterEncoding)
+            InputStream is, String contentType, String characterEncoding, long contentLength)
             throws WebdavException {
 
         LOG.trace("LocalFileSystemStore.setResourceContent(" + uri + ")");
@@ -177,7 +184,7 @@ public class LocalFileSystemStore implements IWebdavStore {
 
     }
 
-    public InputStream getResourceContent(ITransaction transaction, String uri)
+    public InputStream getResourceContent(HttpServletResponse resp, ITransaction transaction, String uri)
             throws WebdavException {
         LOG.trace("LocalFileSystemStore.getResourceContent(" + uri + ")");
         File file = new File(_root, uri);
@@ -215,5 +222,9 @@ public class LocalFileSystemStore implements IWebdavStore {
 
         return so;
     }
+
+
+
+
 
 }

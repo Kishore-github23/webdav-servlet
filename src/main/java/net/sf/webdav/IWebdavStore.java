@@ -26,6 +26,9 @@ package net.sf.webdav;
 import java.io.InputStream;
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import net.sf.webdav.exceptions.WebdavException;
 
 /**
@@ -49,14 +52,16 @@ public interface IWebdavStore {
      * request will be terminated by a {@link #commit()}. This method will be
      * called by (@link WebdavStoreAdapter} at the beginning of each request.
      * 
-     * 
+     *  
      * @param principal
      *      the principal that started this request or <code>null</code> if
      *      there is non available
+     * @param req 
      * 
      * @throws WebdavException
      */
-    ITransaction begin(Principal principal);
+    ITransaction begin(Principal principal, HttpServletRequest req);
+    
 
     /**
      * Checks if authentication information passed in is valid. If not throws an
@@ -80,7 +85,7 @@ public interface IWebdavStore {
      * @throws WebdavException
      *      if something goes wrong on the store level
      */
-    void commit(ITransaction transaction);
+    void commit(ITransaction transaction); 
 
     /**
      * Indicates that all changes done inside this request shall be undone and
@@ -135,7 +140,7 @@ public interface IWebdavStore {
      * @throws WebdavException
      *      if something goes wrong on the store level
      */
-    InputStream getResourceContent(ITransaction transaction, String resourceUri);
+    InputStream getResourceContent(HttpServletResponse resp, ITransaction transaction, String resourceUri);
 
     /**
      * Sets / stores the content of the resource specified by
@@ -158,7 +163,7 @@ public interface IWebdavStore {
      *      if something goes wrong on the store level
      */
     long setResourceContent(ITransaction transaction, String resourceUri,
-            InputStream content, String contentType, String characterEncoding);
+            InputStream content, String contentType, String characterEncoding, long contentLength);
 
     /**
      * Gets the names of the children of the folder specified by
@@ -217,5 +222,7 @@ public interface IWebdavStore {
      * @return StoredObject
      */
     StoredObject getStoredObject(ITransaction transaction, String uri);
+
+	
 
 }

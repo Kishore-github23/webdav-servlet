@@ -59,7 +59,7 @@ public class DoGet extends DoHead {
                 return;
             }
             OutputStream out = resp.getOutputStream();
-            InputStream in = _store.getResourceContent(transaction, path);
+            InputStream in = _store.getResourceContent(resp, transaction, path);
             try {
                 int read = -1;
                 byte[] copyBuffer = new byte[BUF_SIZE];

@@ -146,10 +146,11 @@ public class DoPut extends AbstractMethod {
                     // User-Agent workarounds
                     doUserAgentWorkaround(resp);
 
+                    long length = req.getContentLengthLong();
                     // setting resourceContent
                     long resourceLength = _store
                             .setResourceContent(transaction, path, req
-                                    .getInputStream(), null, null);
+                                    .getInputStream(), req.getContentType(), null, length);
 
                     so = _store.getStoredObject(transaction, path);
                     if (resourceLength != -1)

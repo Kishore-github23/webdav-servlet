@@ -205,6 +205,7 @@ public class XMLWriter {
      */
     public void sendData() throws IOException {
         if (_writer != null) {
+System.out.println(_buffer.toString());
             _writer.write(_buffer.toString());
             _writer.flush();
             _buffer = new StringBuffer();
