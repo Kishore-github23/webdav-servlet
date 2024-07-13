@@ -184,9 +184,10 @@ public class LocalFileSystemStore implements IWebdavStore {
 
     }
 
-    public InputStream getResourceContent(HttpServletResponse resp, ITransaction transaction, String uri)
+    public ResourceContent getResourceContent(ITransaction transaction, String uri)
             throws WebdavException {
         LOG.trace("LocalFileSystemStore.getResourceContent(" + uri + ")");
+        
         File file = new File(_root, uri);
 
         InputStream in;
@@ -197,7 +198,8 @@ public class LocalFileSystemStore implements IWebdavStore {
                     + ") failed");
             throw new WebdavException(e);
         }
-        return in;
+        ResourceContent content = new ResourceContent(file.length(), in);
+        return content;
     }
 
     public long getResourceLength(ITransaction transaction, String uri)

@@ -140,7 +140,7 @@ public interface IWebdavStore {
      * @throws WebdavException
      *      if something goes wrong on the store level
      */
-    InputStream getResourceContent(HttpServletResponse resp, ITransaction transaction, String resourceUri);
+    ResourceContent getResourceContent(ITransaction transaction, String resourceUri);
 
     /**
      * Sets / stores the content of the resource specified by

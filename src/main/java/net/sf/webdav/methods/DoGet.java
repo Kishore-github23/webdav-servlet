@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.webdav.IMimeTyper;
 import net.sf.webdav.ITransaction;
 import net.sf.webdav.IWebdavStore;
+import net.sf.webdav.ResourceContent;
 import net.sf.webdav.StoredObject;
 import net.sf.webdav.WebdavStatus;
 import net.sf.webdav.locking.ResourceLocks;
@@ -59,7 +60,9 @@ public class DoGet extends DoHead {
                 return;
             }
             OutputStream out = resp.getOutputStream();
-            InputStream in = _store.getResourceContent(resp, transaction, path);
+            ResourceContent resource = _store.getResourceContent(transaction, path);
+            resp.setContentLengthLong( resource.getContentLength());
+            InputStream in = resource.getInputStream();
             try {
                 int read = -1;
                 byte[] copyBuffer = new byte[BUF_SIZE];

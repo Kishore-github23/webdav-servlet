@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.webdav.ITransaction;
 import net.sf.webdav.IWebdavStore;
+import net.sf.webdav.ResourceContent;
 import net.sf.webdav.StoredObject;
 import net.sf.webdav.WebdavStatus;
 import net.sf.webdav.exceptions.AccessDeniedException;
@@ -246,11 +247,11 @@ public class DoCopy extends AbstractMethod {
         	//long length = req.getContentLengthLong();
         	long length = sourceSo.getResourceLength();
             _store.createResource(transaction, destinationPath);
-            InputStream out = _store.getResourceContent(resp, transaction,
+            ResourceContent content = _store.getResourceContent(transaction,
                     sourcePath);
             long resourceLength = _store.setResourceContent(transaction,
-                    destinationPath, out, req.getContentType(), null, length);
-            out.close();
+                    destinationPath, content.getInputStream(), req.getContentType(), null, length);
+            content.getInputStream().close();
 
             if (resourceLength != -1) {
                 StoredObject destinationSo = _store.getStoredObject(
@@ -317,10 +318,13 @@ public class DoCopy extends AbstractMethod {
                     	long length = req.getContentLengthLong();
                         _store.createResource(transaction, destinationPath
                                 + children[i]);
+                        
+                        ResourceContent resource = _store.getResourceContent(transaction,
+                                sourcePath + children[i]);
+                        
                         long resourceLength = _store.setResourceContent(
                                 transaction, destinationPath + children[i],
-                                _store.getResourceContent(resp, transaction,
-                                        sourcePath + children[i]), req.getContentType(), null, length);
+                                resource.getInputStream(), req.getContentType(), null, length);
 
                         if (resourceLength != -1) {
                             StoredObject destinationSo = _store
